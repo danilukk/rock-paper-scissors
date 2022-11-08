@@ -36,8 +36,8 @@ function getComputerChoice() {
     return Object.keys(Shape)[Math.floor(Math.random() * Object.keys(Shape).length)];
 }
 
-function getPlayerChoice(roundNumber) {
-    let playerChoice = formatStr( prompt(`Round ${roundNumber} - ` + formatStr( Object.keys(Shape).join(', ') )  + '?') );
+function getPlayerChoice(roundNumber, roundsNumber) {
+    let playerChoice = formatStr( prompt(`Round ${roundNumber}/${roundsNumber} - ` + formatStr( Object.keys(Shape).join(', ') )  + '?') );
 
     if(playerChoice === null)
         return Error.NullInput;
@@ -47,9 +47,9 @@ function getPlayerChoice(roundNumber) {
     return playerChoice;
 }
 
-function playRound(roundNumber) {
+function playRound(roundNumber, roundsNumber) {
     const computerChoice = getComputerChoice();
-    const playerChoice = getPlayerChoice(roundNumber);
+    const playerChoice = getPlayerChoice(roundNumber, roundsNumber);
 
     return {
         playerChoice: playerChoice,
@@ -98,8 +98,8 @@ function printLog(message, logType) {
     alert(message);
 }
 
-function printWinner(playedRound, roundNumber) {
-    printLog(`Round ${roundNumber} - ${playedRound.winner} ${playedRound.additionalMessage}\n`
+function printWinner(playedRound, roundNumber, roundsNumber) {
+    printLog(`Round ${roundNumber}/${roundsNumber} - ${playedRound.winner} ${playedRound.additionalMessage}\n`
                     + `Player choice - ${playedRound.playerChoice}\n`
                     + `Computer choice - ${playedRound.computerChoice}`,
         (playedRound.winner === Winner.Player) ? LogType.Won
@@ -120,12 +120,31 @@ function printTotalWinner(playerScore, computerScore) {
     : LogType.Tie);
 }
 
+function getRoundsNumber() {
+    let roundsNumber = formatStr( prompt("Rounds number?") );
+
+    if(isNaN(roundsNumber) || !Number.isInteger(Number(roundsNumber)) || roundsNumber === '') {
+        printLog(Error.WrongInput, LogType.Error);
+        return getRoundsNumber();
+    }
+    if(roundsNumber === null) {
+        printLog(Error.NullInput, LogType.Warn);
+        return Error.NullInput;
+    }
+
+    printLog(`You will play ${roundsNumber} rounds...`, LogType.Info, false);
+    return Number(roundsNumber);
+}
+
 function game() {
     let playerScore = 0,
         computerScore = 0;
 
-    for (let roundNumber = 1; roundNumber <= 5; roundNumber++) {
-        const playedRound = playRound(roundNumber);
+    let roundsNumber = getRoundsNumber();
+    if(roundsNumber === Error.NullInput) return;
+
+    for (let roundNumber = 1; roundNumber <= roundsNumber; roundNumber++) {
+        const playedRound = playRound(roundNumber, roundsNumber);
 
         if(playedRound.playerChoice === Error.NullInput) {
             printLog(Error.NullInput, LogType.Warn);
@@ -137,7 +156,7 @@ function game() {
             continue;
         }
 
-        printWinner(playedRound, roundNumber);
+        printWinner(playedRound, roundNumber, roundsNumber);
         
         if(playedRound.winner === Winner.Player)
             playerScore++;
