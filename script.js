@@ -20,7 +20,8 @@ const LogType = {
     Warn: 'Warn',
     Won: 'Won',
     Lose: 'Lose',
-    Tie: 'Tie'
+    Tie: 'Tie',
+    Info: 'Info'
 }
 
 function formatStr(str) {
@@ -78,7 +79,7 @@ function playRound(roundNumber, roundsNumber) {
     };
 }
 
-function printLog(message, logType) {
+function printLog(message, logType, doShowAlert = true) {
     if(logType === LogType.Error) {
         console.error(message);
     }
@@ -91,11 +92,13 @@ function printLog(message, logType) {
     if(logType === LogType.Lose) {
         console.log(`%c${message}`, "color: #e25555");
     }
-    if(logType === LogType.Tie) {
+    if(logType === LogType.Tie || logType === LogType.Info) {
         console.log(`%c${message}`, "color: #dfdfdf");
     }
 
-    alert(message);
+    if(doShowAlert) {
+        alert(message);
+    }
 }
 
 function printWinner(playedRound, roundNumber, roundsNumber) {
