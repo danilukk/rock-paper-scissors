@@ -25,7 +25,7 @@ const LogType = {
 }
 
 function formatStr(str) {
-    if(str === null) return null;
+    if(str === null) return Error.NullInput;
 
     // '   sTrInG' => 'String'
     str = str.trim().split('');
@@ -40,7 +40,7 @@ function getComputerChoice() {
 function getPlayerChoice(roundNumber, roundsNumber) {
     let playerChoice = formatStr( prompt(`Round ${roundNumber}/${roundsNumber} - ` + formatStr( Object.keys(Shape).join(', ') )  + '?') );
 
-    if(playerChoice === null)
+    if(playerChoice === Error.NullInput)
         return Error.NullInput;
     if(!Shape.hasOwnProperty(playerChoice))
         return Error.WrongInput;
