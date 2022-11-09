@@ -16,3 +16,9 @@ function getComputerChoice() {
     // Returns random Shape
     return Object.keys(Shape)[Math.floor(Math.random() * Object.keys(Shape).length)];
 }
+
+function getPlayerChoice() {
+    let playerChoice = formatStr( prompt(formatStr( Object.keys(Shape).join(', ') )  + '?') );
+
+    return playerChoice;
+}
